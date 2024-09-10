@@ -7,21 +7,21 @@
 	<key>CFBundleExecutable</key>
 	<string>plugin</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yintuzyuan.ShowBopomofo</string>
+	<string>com.yintzuyuan.ShowBopomofo</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ShowBopomofo</string>
+	<string>Show Bopomofo</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>UpdateFeedURL</key>
-	<string>https://raw.githubusercontent.com/yintuzyuan/ShowBopomofo/main/ShowBopomofo.glyphsReporter/Contents/Info.plist</string>
+	<string>https://raw.githubusercontent.com/yintzuyuan/ShowBopomofo/main/ShowBopomofo.glyphsReporter/Contents/Info.plist</string>
 	<key>productPageURL</key>
-	<string>https://github.com/yintuzyuan/ShowBopomofo</string>
+	<string>https://github.com/yintzuyuan/ShowBopomofo</string>
 	<key>productReleaseNotes</key>
-	<string>update binary files for Glyphs3</string>
+	<string>First Release.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright, Tuzyuan Yin, 2024</string>
 	<key>NSPrincipalClass</key>
