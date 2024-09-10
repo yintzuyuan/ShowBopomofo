@@ -7,7 +7,7 @@
 
 ---
 
-ShowBopomofo 是一個 Glyphs.app 外掛程式，用於在編輯字符時顯示對應的注音符號（ㄅㄆㄇㄈ）。安裝後，可以透過選擇「檢視 > 顯示 注音符號」來開啟或關閉此功能。這對於處理中文字符特別有幫助，因為字符名稱通常不太直觀。您可以在系統偏好設定中設定快捷鍵。
+ShowBopomofo 是一個 [Glyphs.app](https://glyphsapp.com/) 外掛程式，用於在編輯字符時顯示對應的注音符號（ㄅㄆㄇㄈ）。安裝後，可以透過選擇「檢視 > 顯示 注音符號」來開啟或關閉此功能。這對於處理中文字符特別有幫助，因為字符名稱通常不太直觀。您可以在系統偏好設定中設定快捷鍵。
 
 ![ShowBopomofo 截圖](ShowBopomofo.png)
 
@@ -51,7 +51,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 # ShowBopomofo (English)
 
-ShowBopomofo is a Glyphs.app plugin for displaying corresponding Bopomofo (ㄅㄆㄇㄈ) when editing characters. After installation, you can turn it on or off by choosing "View > Show Bopomofo". This can be particularly helpful for handling Chinese characters, as glyph names are often not intuitive. You can set a shortcut in System Preferences.
+ShowBopomofo is a [Glyphs.app](https://glyphsapp.com/) plugin for displaying corresponding Bopomofo (ㄅㄆㄇㄈ) when editing characters. After installation, you can turn it on or off by choosing "View > Show Bopomofo". This can be particularly helpful for handling Chinese characters, as glyph names are often not intuitive. You can set a shortcut in System Preferences.
 
 ![ShowBopomofo Screenshot](ShowBopomofo.png)
 
