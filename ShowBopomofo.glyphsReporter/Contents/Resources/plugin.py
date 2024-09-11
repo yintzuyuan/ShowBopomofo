@@ -92,15 +92,14 @@ class ShowBopomofo(ReporterPlugin):
                     
                     fontColor = NSColor.colorWithRed_green_blue_alpha_(0.5, 0.8, 0.9, 1.0)
                     
-                    all_bopomofo = []
+                    all_bopomofo = set()  # 使用集合來自動去除重複
                     for unicode_hex in unicode_list:
                         bopomofo_list = self.unicode_to_bopomofo.get(unicode_hex, [])
-                        if bopomofo_list:
-                            all_bopomofo.extend(bopomofo_list)
+                        all_bopomofo.update(bopomofo_list)  # 將新的注音添加到集合中
                     
                     if all_bopomofo:
-                        # 將所有注音以全形逗號連接
-                        bopomofo_text = ", ".join(all_bopomofo)
+                        # 將所有唯一的注音以全形逗號連接
+                        bopomofo_text = ", ".join(sorted(all_bopomofo))  # 排序以保持一致的顯示順序
                         
                         self.drawTextAtPoint(
                             bopomofo_text, 
