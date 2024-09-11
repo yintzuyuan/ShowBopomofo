@@ -95,11 +95,12 @@ class ShowBopomofo(ReporterPlugin):
                     all_bopomofo = []
                     for unicode_hex in unicode_list:
                         bopomofo_list = self.unicode_to_bopomofo.get(unicode_hex, [])
-                        all_bopomofo.extend(bopomofo_list)
-
+                        if bopomofo_list:
+                            all_bopomofo.extend(bopomofo_list)
+                    
                     if all_bopomofo:
-                        # 將多個注音以全形逗號連接
-                        bopomofo_text = ", ".join(bopomofo_list)
+                        # 將所有注音以全形逗號連接
+                        bopomofo_text = "，".join(all_bopomofo)
                         
                         self.drawTextAtPoint(
                             bopomofo_text, 
