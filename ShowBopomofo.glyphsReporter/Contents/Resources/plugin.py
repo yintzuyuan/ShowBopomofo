@@ -67,33 +67,37 @@ class ShowBopomofo(ReporterPlugin):
     def foreground(self, layer):
         try:
             glyph = layer.parent
-            character = glyph.glyphInfo.unicharString()
+            unicode_list = glyph.unicodes  # 獲取所有 Unicode 值
             
-            if not character and "." in glyph.name:
+            if not unicode_list and "." in glyph.name:
                 nameWithoutSuffix = glyph.name[:glyph.name.find(".")]
                 glyphInfo = Glyphs.glyphInfoForName(nameWithoutSuffix)
-                character = glyphInfo.unicharString()
-                
-            if character:
-                unicode_hex = f"{ord(character):04X}"
-                bopomofo_list = self.unicode_to_bopomofo.get(unicode_hex, [])
-                if bopomofo_list:
-                    font = Glyphs.font
-                    tab = font.currentTab
-                    if tab and tab.scale > 0.1999:
-                        master = layer.associatedFontMaster()
-                        
-                        # X 座標：設定在字符的右側
-                        x = layer.bounds.origin.x + layer.bounds.size.width + 50.0
-                        
-                        # Y 座標：使用與原始程式碼相同的邏輯
-                        y = max(master.ascender, layer.bounds.origin.y + layer.bounds.size.height + 50.0)
-                        
-                        # 調整參數：字體大小
-                        fontSize = 24.0
-                        
-                        fontColor = NSColor.colorWithRed_green_blue_alpha_(0.5, 0.8, 0.9, 1.0)
-                        
+                if glyphInfo:
+                    unicode_list = glyphInfo.unicodes
+            
+            if unicode_list:
+                font = Glyphs.font
+                tab = font.currentTab
+                if tab and tab.scale > 0.1999:
+                    master = layer.associatedFontMaster()
+                    
+                    # X 座標：設定在字符的右側
+                    x = layer.bounds.origin.x + layer.bounds.size.width + 50.0
+                    
+                    # Y 座標：使用與原始程式碼相同的邏輯
+                    y = max(master.ascender, layer.bounds.origin.y + layer.bounds.size.height + 50.0)
+                    
+                    # 調整參數：字體大小
+                    fontSize = 24.0
+                    
+                    fontColor = NSColor.colorWithRed_green_blue_alpha_(0.5, 0.8, 0.9, 1.0)
+                    
+                    all_bopomofo = []
+                    for unicode_hex in unicode_list:
+                        bopomofo_list = self.unicode_to_bopomofo.get(unicode_hex, [])
+                        all_bopomofo.extend(bopomofo_list)
+
+                    if all_bopomofo:
                         # 將多個注音以全形逗號連接
                         bopomofo_text = ", ".join(bopomofo_list)
                         
