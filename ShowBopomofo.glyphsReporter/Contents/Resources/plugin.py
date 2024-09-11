@@ -100,7 +100,7 @@ class ShowBopomofo(ReporterPlugin):
                     
                     if all_bopomofo:
                         # 將所有注音以全形逗號連接
-                        bopomofo_text = "，".join(all_bopomofo)
+                        bopomofo_text = ", ".join(all_bopomofo)
                         
                         self.drawTextAtPoint(
                             bopomofo_text, 
