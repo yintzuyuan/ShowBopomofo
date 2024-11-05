@@ -100,7 +100,7 @@ class ShowBopomofo(ReporterPlugin):
                     master = layer.associatedFontMaster()
                     
                     # 計算 X 和 Y 座標
-                    x = layer.bounds.origin.x + layer.bounds.size.width + 50.0
+                    x = layer.width
                     y = max(master.ascender, layer.bounds.origin.y + layer.bounds.size.height + 50.0)
                     
                     fontSize = 24.0  # 字體大小
