@@ -5,7 +5,7 @@ def load_unicode_to_cns():
     unicode_files = ['CNS2UNICODE_Unicode BMP.txt', 'CNS2UNICODE_Unicode 2.txt', 'CNS2UNICODE_Unicode 15.txt']
     
     for file in unicode_files:
-        file_path = os.path.join('datatool', file)
+        file_path = os.path.join('datatools', file)
         with open(file_path, 'r', encoding='utf-8') as f:
             for line in f:
                 cns, unicode = line.strip().split('\t')
@@ -19,7 +19,7 @@ def load_unicode_to_cns():
 def load_cns_to_bopomofo():
     cns_to_bopomofo = {}
     
-    file_path = os.path.join('datatool', 'CNS_phonetic.txt')
+    file_path = os.path.join('datatools', 'CNS_phonetic.txt')
     with open(file_path, 'r', encoding='utf-8') as f:
         for line in f:
             cns, phonetic = line.strip().split('\t')
