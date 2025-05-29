@@ -101,7 +101,7 @@ class ShowBopomofo(ReporterPlugin):
                     
                     # 計算 X 和 Y 座標
                     x = layer.width
-                    y = max(master.ascender, layer.bounds().origin.y + layer.bounds().size.height + 50.0)
+                    y = max(master.ascender, layer.bounds.origin.y + layer.bounds.size.height + 50.0)
                     
                     fontSize = 24.0  # 字體大小
                     fontColor = NSColor.colorWithRed_green_blue_alpha_(0.5, 0.8, 0.9, 1.0)  # 字體顏色
