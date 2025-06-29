@@ -27,17 +27,17 @@ import re
 sys.path.append(os.path.join(os.path.dirname(__file__), 'cns_data_provider'))
 from provider import CNSDataProvider
 
-class ShowBopomofo(ReporterPlugin):
+class ShowChinesePhonetics(ReporterPlugin):
 
     @objc.python_method
     def settings(self):
         # 設定外掛的選單名稱，支持多語言
         self.menuName = Glyphs.localize({
             'en': u'Chinese Phonetics',
-            'zh-Hant': u'漢字發音',
-            'zh-Hans': u'汉字发音',
-            'ja': u'漢字発音',
-            'ko': u'한자발음',
+            'zh-Hant': u'漢語發音',
+            'zh-Hans': u'汉语发音',
+            'ja': u'中国語発音',
+            'ko': u'중국어 발음',
         })
         
         # 註冊預設值
@@ -139,10 +139,10 @@ class ShowBopomofo(ReporterPlugin):
         mainMenu = NSMenuItem.alloc().init()
         mainMenu.setTitle_(Glyphs.localize({
             'en': u'Chinese Phonetics Display',
-            'zh-Hant': u'漢字發音顯示',
-            'zh-Hans': u'汉字发音显示',
-            'ja': u'漢字発音表示',
-            'ko': u'한자발음표시',
+            'zh-Hant': u'漢語發音顯示',
+            'zh-Hans': u'汉语发音显示',
+            'ja': u'中国語発音表示',
+            'ko': u'중국어 발음 표시',
         }))
         mainMenu.setSubmenu_(subMenu)
         
