@@ -97,8 +97,8 @@ class ShowChinesePhonetics(ReporterPlugin):
                 }},
             {'key': 1, 'name': {
                 'en': 'Pinyin (Diacritics)', 
-                'zh-Hant': '拼音（變音符號）', 
-                'zh-Hans': '拼音（变音符号）',
+                'zh-Hant': '拼音（聲調符號）', 
+                'zh-Hans': '拼音（声调符号）',
                 'ja': 'ピンイン（声調記号）', 
                 'ko': '병음（성조부호）'
             }},
@@ -138,11 +138,11 @@ class ShowChinesePhonetics(ReporterPlugin):
         # 建立主選單項目
         mainMenu = NSMenuItem.alloc().init()
         mainMenu.setTitle_(Glyphs.localize({
-            'en': u'Chinese Phonetics Display',
-            'zh-Hant': u'漢語發音顯示',
-            'zh-Hans': u'汉语发音显示',
-            'ja': u'中国語発音表示',
-            'ko': u'중국어 발음 표시',
+            'en': u'Chinese Phonetics Display Mode',
+            'zh-Hant': u'漢語發音顯示模式',
+            'zh-Hans': u'汉语发音显示模式',
+            'ja': u'中国語発音表示モード',
+            'ko': u'중국어 발음 표시 모드',
         }))
         mainMenu.setSubmenu_(subMenu)
         
@@ -238,7 +238,7 @@ class ShowChinesePhonetics(ReporterPlugin):
                                 
                                 if displayMode == 0:  # 注音符號
                                     phonetic_data = row['phonetic']
-                                elif displayMode == 1:  # 拼音（變音符號）
+                                elif displayMode == 1:  # 拼音（聲調符號）
                                     phonetic_data = row['pinyin_han_dia'] if row['pinyin_han_dia'] else row['phonetic']
                                 elif displayMode == 2:  # 拼音（數字）
                                     phonetic_data = row['pinyin_han'] if row['pinyin_han'] else row['phonetic']
