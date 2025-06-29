@@ -18,8 +18,10 @@ from __future__ import division, print_function, unicode_literals
 import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
+from Cocoa import NSBezierPath, NSColor, NSImage, NSMenu, NSMenuItem, NSPoint, NSFont, NSFontAttributeName, NSForegroundColorAttributeName, NSAttributedString, NSSize, NSRect, NSMakeRect, NSLog, NSNotFound, NSOnState
 import os
 import sys
+import re
 
 # Add the cns_data_provider directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'cns_data_provider'))
@@ -31,13 +33,21 @@ class ShowBopomofo(ReporterPlugin):
     def settings(self):
         # 設定外掛的選單名稱，支持多語言
         self.menuName = Glyphs.localize({
-            'en': u'Bopomofo',
-            'zh': u'注音符號',
-            'ja': u'注音符号',
-            'ko': u'주음부호',
+            'en': u'Chinese Phonetics',
+            'zh-Hant': u'漢字發音',
+            'zh-Hans': u'汉字发音',
+            'ja': u'漢字発音',
+            'ko': u'한자발음',
         })
+        
+        # 註冊預設值
+        Glyphs.registerDefault("com.yintzuyuan.showphonetics.displayMode", 0)  # 0: 注音, 1: 拼音, 2: 拼音數字
+        
         self.cns_provider = CNSDataProvider()
         self.load_data()  # 載入 Unicode 對應的注音符號
+        
+        # 建立右鍵選單
+        self.generalContextMenus = self.buildContextMenus()
 
     @objc.python_method
     def start(self):
@@ -62,6 +72,101 @@ class ShowBopomofo(ReporterPlugin):
     @objc.python_method
     def get_resource_path(self, filename):
         return os.path.join(os.path.dirname(__file__), filename)
+
+    @objc.python_method
+    def buildContextMenus(self):
+        # 建立圖示（可選）
+        dot = None
+        try:
+            dot = NSImage.imageWithSystemSymbolName_accessibilityDescription_("circlebadge.fill", None)
+            dot.setTemplate_(True)  # 讓圖示融入工具列
+        except:
+            pass
+        
+        # 建立選單項目列表
+        contextMenus = []
+        
+        # 顯示模式選項
+        displayModes = [
+            {'key': 0, 'name': {
+                'en': 'Zhuyin (Bopomofo)', 
+                'zh-Hant': '注音符號', 
+                'zh-Hans': '注音符号',
+                'ja': '注音符号', 
+                'ko': '주음부호'
+                }},
+            {'key': 1, 'name': {
+                'en': 'Pinyin (Diacritics)', 
+                'zh-Hant': '拼音（變音符號）', 
+                'zh-Hans': '拼音（变音符号）',
+                'ja': 'ピンイン（声調記号）', 
+                'ko': '병음（성조부호）'
+            }},
+            {'key': 2, 'name': {
+                'en': 'Pinyin (Numbers)', 
+                'zh-Hant': '拼音（數字）', 
+                'zh-Hans': '拼音（数字）',
+                'ja': 'ピンイン（数字）', 
+                'ko': '병음（숫자）'
+            }},
+        ]
+        
+        currentMode = Glyphs.defaults["com.yintzuyuan.showphonetics.displayMode"]
+        
+        for mode in displayModes:
+            menu = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+                Glyphs.localize(mode['name']),
+                "switchDisplayMode:",
+                ""
+            )
+            menu.setTag_(mode['key'])
+            
+            # 設定選中狀態
+            if currentMode == mode['key']:
+                menu.setState_(NSOnState)
+                if dot:
+                    menu.setOnStateImage_(dot)
+            
+            contextMenus.append({"menu": menu})
+        
+        # 建立子選單
+        subMenu = NSMenu.alloc().init()
+        for item in contextMenus:
+            item['menu'].setTarget_(self)  # 設定目標對象
+            subMenu.addItem_(item['menu'])
+        
+        # 建立主選單項目
+        mainMenu = NSMenuItem.alloc().init()
+        mainMenu.setTitle_(Glyphs.localize({
+            'en': u'Chinese Phonetics Display',
+            'zh-Hant': u'漢字發音顯示',
+            'zh-Hans': u'汉字发音显示',
+            'ja': u'漢字発音表示',
+            'ko': u'한자발음표시',
+        }))
+        mainMenu.setSubmenu_(subMenu)
+        
+        return [{'menu': mainMenu}]
+
+    def switchDisplayMode_(self, sender):
+        # 切換顯示模式
+        newMode = sender.tag()
+        Glyphs.defaults["com.yintzuyuan.showphonetics.displayMode"] = newMode
+        
+        # 重新建立選單以更新狀態
+        self.generalContextMenus = self.buildContextMenus()
+        
+        # 強制重新繪製當前標籤頁
+        try:
+            font = Glyphs.font
+            if font and font.currentTab:
+                # 觸發重新繪製
+                font.currentTab.forceRedraw()
+                # 或者使用更新顯示的方法
+                font.currentTab.updateInterface()
+        except:
+            pass
+
 
     @objc.python_method
     def drawTextAtPoint(self, text, textPosition, fontSize=10.0, fontColor=NSColor.blackColor(), align='topright'):
@@ -123,22 +228,34 @@ class ShowBopomofo(ReporterPlugin):
                                 if not self.cns_provider.connect():
                                     continue
                             
-                            # 查詢 SQLite 資料庫取得注音資料
+                            # 查詢 SQLite 資料庫取得發音資料
                             cursor = self.cns_provider.conn.cursor()
-                            cursor.execute("SELECT phonetic FROM characters WHERE unicode = ?", (unicode_hex.upper(),))
+                            cursor.execute("SELECT phonetic, pinyin_han, pinyin_han_dia FROM characters WHERE unicode = ?", (unicode_hex.upper(),))
                             row = cursor.fetchone()
                             if row and row['phonetic']:
-                                bopomofo_list = [b.strip() for b in row['phonetic'].split(',') if b.strip()]
-                                all_bopomofo.update(bopomofo_list)
+                                # 根據顯示模式獲取對應的發音資料
+                                displayMode = Glyphs.defaults["com.yintzuyuan.showphonetics.displayMode"]
+                                
+                                if displayMode == 0:  # 注音符號
+                                    phonetic_data = row['phonetic']
+                                elif displayMode == 1:  # 拼音（變音符號）
+                                    phonetic_data = row['pinyin_han_dia'] if row['pinyin_han_dia'] else row['phonetic']
+                                elif displayMode == 2:  # 拼音（數字）
+                                    phonetic_data = row['pinyin_han'] if row['pinyin_han'] else row['phonetic']
+                                else:
+                                    phonetic_data = row['phonetic']
+                                
+                                phonetic_list = [p.strip() for p in phonetic_data.split(',') if p.strip()]
+                                all_bopomofo.update(phonetic_list)
                         except Exception as e:
                             print(f"Error querying database for {unicode_hex}: {str(e)}")
                     
                     if all_bopomofo:
-                        # 將所有唯一的注音以半形逗號連接
-                        bopomofo_text = ", ".join(sorted(all_bopomofo))  # 排序以保持一致的顯示順序
+                        # 將所有唯一的發音以半形逗號連接（已經根據顯示模式獲取了正確格式）
+                        phonetics_text = ", ".join(sorted(all_bopomofo))  # 排序以保持一致的顯示順序
                         
                         self.drawTextAtPoint(
-                            bopomofo_text, 
+                            phonetics_text, 
                             NSPoint(x, y),
                             fontSize=fontSize, 
                             fontColor=fontColor,
