@@ -19,6 +19,11 @@ import objc
 from GlyphsApp import *
 from GlyphsApp.plugins import *
 import os
+import sys
+
+# Add the cns_data_provider directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'cns_data_provider'))
+from provider import CNSDataProvider
 
 class ShowBopomofo(ReporterPlugin):
 
@@ -31,24 +36,28 @@ class ShowBopomofo(ReporterPlugin):
             'ja': u'注音符号',
             'ko': u'주음부호',
         })
-        self.unicode_to_bopomofo = {}
+        self.cns_provider = CNSDataProvider()
         self.load_data()  # 載入 Unicode 對應的注音符號
 
     @objc.python_method
     def start(self):
         # 移除可能導致錯誤的方法
         pass
+    
+    @objc.python_method
+    def stop(self):
+        # 關閉資料庫連線
+        if hasattr(self, 'cns_provider') and self.cns_provider:
+            self.cns_provider.disconnect()
 
     @objc.python_method
     def load_data(self):
-        # 載入 Unicode 對應的注音符號資料
+        # 初始化 CNS 資料提供者連線
         try:
-            with open(self.get_resource_path('unicode_to_bopomofo.txt'), 'r', encoding='utf-8') as f:
-                for line in f:
-                    unicode, bopomofo = line.strip().split('\t')
-                    self.unicode_to_bopomofo[unicode] = bopomofo.split(',')
+            if not self.cns_provider.connect():
+                print("Failed to connect to CNS database")
         except Exception as e:
-            print(f"Error reading unicode_to_bopomofo.txt: {str(e)}")  # 錯誤處理
+            print(f"Error connecting to CNS database: {str(e)}")
 
     @objc.python_method
     def get_resource_path(self, filename):
@@ -108,8 +117,21 @@ class ShowBopomofo(ReporterPlugin):
                     
                     all_bopomofo = set()  # 使用集合自動去除重複的注音符號
                     for unicode_hex in unicode_list:
-                        bopomofo_list = self.unicode_to_bopomofo.get(unicode_hex, [])
-                        all_bopomofo.update(bopomofo_list)  # 更新集合
+                        try:
+                            # 確保資料庫連線
+                            if not self.cns_provider.conn:
+                                if not self.cns_provider.connect():
+                                    continue
+                            
+                            # 查詢 SQLite 資料庫取得注音資料
+                            cursor = self.cns_provider.conn.cursor()
+                            cursor.execute("SELECT phonetic FROM characters WHERE unicode = ?", (unicode_hex.upper(),))
+                            row = cursor.fetchone()
+                            if row and row['phonetic']:
+                                bopomofo_list = [b.strip() for b in row['phonetic'].split(',') if b.strip()]
+                                all_bopomofo.update(bopomofo_list)
+                        except Exception as e:
+                            print(f"Error querying database for {unicode_hex}: {str(e)}")
                     
                     if all_bopomofo:
                         # 將所有唯一的注音以半形逗號連接
