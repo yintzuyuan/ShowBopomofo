@@ -201,11 +201,17 @@ class ShowChinesePhonetics(ReporterPlugin):
             glyph = layer.parent
             unicode_list = glyph.unicodes  # 獲取所有 Unicode 值
             
-            if not unicode_list and "." in glyph.name:
+            # 如果字符名稱包含後綴，從字體中查找基礎字符的 Unicode 值
+            if "." in glyph.name:
                 nameWithoutSuffix = glyph.name[:glyph.name.find(".")]
-                glyphInfo = Glyphs.glyphInfoForName(nameWithoutSuffix)
-                if glyphInfo:
-                    unicode_list = glyphInfo.unicodes
+                font = Glyphs.font
+                baseGlyph = font.glyphs[nameWithoutSuffix]
+                if baseGlyph and baseGlyph.unicodes:
+                    unicode_list = baseGlyph.unicodes
+            
+            # 如果沒有 Unicode 值，使用原有的值作為回退
+            if not unicode_list:
+                unicode_list = glyph.unicodes
             
             if unicode_list:
                 font = Glyphs.font
