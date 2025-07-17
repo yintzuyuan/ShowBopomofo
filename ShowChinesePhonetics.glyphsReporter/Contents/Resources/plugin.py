@@ -25,7 +25,7 @@ import re
 
 # Add the cns_data_provider directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'cns_data_provider'))
-from provider import CNSDataProvider
+from cns_data_provider.provider import CNSDataProvider
 
 class ShowChinesePhonetics(ReporterPlugin):
 
