@@ -23,9 +23,9 @@ import os
 import sys
 import re
 
-# Add the cns_data_provider directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'cns_data_provider'))
-from cns_data_provider.provider import CNSDataProvider
+# Add the ShowChinesePhonetics_data directory to the Python path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'ShowChinesePhonetics_data'))
+from ShowChinesePhonetics_data.provider import CNSDataProvider
 
 class ShowChinesePhonetics(ReporterPlugin):
 
@@ -41,7 +41,7 @@ class ShowChinesePhonetics(ReporterPlugin):
         })
         
         # 註冊預設值
-        Glyphs.registerDefault("com.yintzuyuan.showphonetics.displayMode", 0)  # 0: 注音, 1: 拼音, 2: 拼音數字
+        Glyphs.registerDefault("com.YinTzuYuan.showphonetics.displayMode", 0)  # 0: 注音, 1: 拼音, 2: 威妥瑪拼音
         
         self.cns_provider = CNSDataProvider()
         self.load_data()  # 載入 Unicode 對應的注音符號
@@ -96,23 +96,23 @@ class ShowChinesePhonetics(ReporterPlugin):
                 'ko': '주음부호'
                 }},
             {'key': 1, 'name': {
-                'en': 'Pinyin (Diacritics)', 
-                'zh-Hant': '拼音（聲調符號）', 
-                'zh-Hans': '拼音（声调符号）',
-                'ja': 'ピンイン（声調記号）', 
-                'ko': '병음（성조부호）'
+                'en': 'Pinyin', 
+                'zh-Hant': '漢語拼音', 
+                'zh-Hans': '汉语拼音',
+                'ja': '拼音', 
+                'ko': '한어병음'
             }},
             {'key': 2, 'name': {
-                'en': 'Pinyin (Numbers)', 
-                'zh-Hant': '拼音（數字）', 
-                'zh-Hans': '拼音（数字）',
-                'ja': 'ピンイン（数字）', 
-                'ko': '병음（숫자）'
+                'en': 'Wade-Giles', 
+                'zh-Hant': '威妥瑪拼音', 
+                'zh-Hans': '威妥玛式拼音',
+                'ja': 'ウェード式', 
+                'ko': '웨이드-자일스 표기법'
             }},
         ]
-        
-        currentMode = Glyphs.defaults["com.yintzuyuan.showphonetics.displayMode"]
-        
+
+        currentMode = Glyphs.defaults["com.YinTzuYuan.showphonetics.displayMode"]
+
         for mode in displayModes:
             menu = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
                 Glyphs.localize(mode['name']),
@@ -151,8 +151,8 @@ class ShowChinesePhonetics(ReporterPlugin):
     def switchDisplayMode_(self, sender):
         # 切換顯示模式
         newMode = sender.tag()
-        Glyphs.defaults["com.yintzuyuan.showphonetics.displayMode"] = newMode
-        
+        Glyphs.defaults["com.YinTzuYuan.showphonetics.displayMode"] = newMode
+
         # 重新建立選單以更新狀態
         self.generalContextMenus = self.buildContextMenus()
         
@@ -236,18 +236,18 @@ class ShowChinesePhonetics(ReporterPlugin):
                             
                             # 查詢 SQLite 資料庫取得發音資料
                             cursor = self.cns_provider.conn.cursor()
-                            cursor.execute("SELECT phonetic, pinyin_han, pinyin_han_dia FROM characters WHERE unicode = ?", (unicode_hex.upper(),))
+                            cursor.execute("SELECT phonetic, pinyin_wei_dia, pinyin_han_dia FROM characters WHERE unicode = ?", (unicode_hex.upper(),))
                             row = cursor.fetchone()
                             if row and row['phonetic']:
                                 # 根據顯示模式獲取對應的發音資料
-                                displayMode = Glyphs.defaults["com.yintzuyuan.showphonetics.displayMode"]
-                                
+                                displayMode = Glyphs.defaults["com.YinTzuYuan.showphonetics.displayMode"]
+
                                 if displayMode == 0:  # 注音符號
                                     phonetic_data = row['phonetic']
-                                elif displayMode == 1:  # 拼音（聲調符號）
+                                elif displayMode == 1:  # 漢語拼音
                                     phonetic_data = row['pinyin_han_dia'] if row['pinyin_han_dia'] else row['phonetic']
-                                elif displayMode == 2:  # 拼音（數字）
-                                    phonetic_data = row['pinyin_han'] if row['pinyin_han'] else row['phonetic']
+                                elif displayMode == 2:  # 威妥瑪拼音
+                                    phonetic_data = row['pinyin_wei_dia'] if row['pinyin_wei_dia'] else row['phonetic']
                                 else:
                                     phonetic_data = row['phonetic']
                                 

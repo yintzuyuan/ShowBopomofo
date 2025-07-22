@@ -7,23 +7,23 @@
 	<key>CFBundleExecutable</key>
 	<string>plugin</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yintzuyuan.ShowChinesePhonetics</string>
+	<string>com.YinTzuYuan.ShowChinesePhonetics</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>Show Chinese Phonetics</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.0</string>
+	<string>2.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>4</string>
 	<key>UpdateFeedURL</key>
 	<string>https://raw.githubusercontent.com/yintzuyuan/ShowChinesePhonetics/main/ShowChinesePhonetics.glyphsReporter/Contents/Info.plist</string>
 	<key>productPageURL</key>
 	<string>https://github.com/yintzuyuan/ShowChinesePhonetics</string>
 	<key>productReleaseNotes</key>
-	<string>add right menu support, switch zhuyin or pinyin mode.</string>
+	<string>Add Wade-Giles romanization support. Replace numeric pinyin with Wade-Giles system. Support for Zhuyin, Hanyu Pinyin, and Wade-Giles phonetic notations.</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright, Tuzyuan Yin, 2024</string>
+	<string>© 2025 TzuYuan Yin</string>
 	<key>NSPrincipalClass</key>
 	<string>ShowChinesePhonetics</string>
 	<key>PyMainFileNames</key>
