@@ -20,12 +20,8 @@ from GlyphsApp import *
 from GlyphsApp.plugins import *
 from Cocoa import NSBezierPath, NSColor, NSImage, NSMenu, NSMenuItem, NSPoint, NSFont, NSFontAttributeName, NSForegroundColorAttributeName, NSAttributedString, NSSize, NSRect, NSMakeRect, NSLog, NSNotFound, NSOnState
 import os
-import sys
+import sqlite3
 import re
-
-# Add the ShowChinesePhonetics_data directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'ShowChinesePhonetics_data'))
-from ShowChinesePhonetics_data.provider import CNSDataProvider
 
 class ShowChinesePhonetics(ReporterPlugin):
 
@@ -42,9 +38,10 @@ class ShowChinesePhonetics(ReporterPlugin):
         
         # 註冊預設值
         Glyphs.registerDefault("com.YinTzuYuan.showphonetics.displayMode", 0)  # 0: 注音, 1: 拼音, 2: 威妥瑪拼音
-        
-        self.cns_provider = CNSDataProvider()
-        self.load_data()  # 載入 Unicode 對應的注音符號
+
+        self.db_path = os.path.join(os.path.dirname(__file__), 'ShowChinesePhonetics_data.db')
+        self.conn = None
+        self.init_database()  # 初始化資料庫連線
         
         # 建立右鍵選單
         self.generalContextMenus = self.buildContextMenus()
@@ -57,17 +54,19 @@ class ShowChinesePhonetics(ReporterPlugin):
     @objc.python_method
     def stop(self):
         # 關閉資料庫連線
-        if hasattr(self, 'cns_provider') and self.cns_provider:
-            self.cns_provider.disconnect()
+        if self.conn:
+            self.conn.close()
+            self.conn = None
 
     @objc.python_method
-    def load_data(self):
-        # 初始化 CNS 資料提供者連線
+    def init_database(self):
+        # 初始化資料庫連線
         try:
-            if not self.cns_provider.connect():
-                print("Failed to connect to CNS database")
-        except Exception as e:
-            print(f"Error connecting to CNS database: {str(e)}")
+            self.conn = sqlite3.connect(self.db_path)
+            self.conn.row_factory = sqlite3.Row
+        except sqlite3.Error as e:
+            print(f"資料庫連線錯誤: {e}")
+            self.conn = None
 
     @objc.python_method
     def get_resource_path(self, filename):
@@ -230,12 +229,13 @@ class ShowChinesePhonetics(ReporterPlugin):
                     for unicode_hex in unicode_list:
                         try:
                             # 確保資料庫連線
-                            if not self.cns_provider.conn:
-                                if not self.cns_provider.connect():
+                            if not self.conn:
+                                self.init_database()
+                                if not self.conn:
                                     continue
-                            
+
                             # 查詢 SQLite 資料庫取得發音資料
-                            cursor = self.cns_provider.conn.cursor()
+                            cursor = self.conn.cursor()
                             cursor.execute("SELECT phonetic, pinyin_wei_dia, pinyin_han_dia FROM characters WHERE unicode = ?", (unicode_hex.upper(),))
                             row = cursor.fetchone()
                             if row and row['phonetic']:
@@ -250,7 +250,7 @@ class ShowChinesePhonetics(ReporterPlugin):
                                     phonetic_data = row['pinyin_wei_dia'] if row['pinyin_wei_dia'] else row['phonetic']
                                 else:
                                     phonetic_data = row['phonetic']
-                                
+
                                 phonetic_list = [p.strip() for p in phonetic_data.split(',') if p.strip()]
                                 all_bopomofo.update(phonetic_list)
                         except Exception as e:
