@@ -31,6 +31,9 @@ MANIFEST
 *.swp
 *.swo
 
+# Claude Code
+.claude/
+
 # macOS
 .DS_Store
 .AppleDouble
