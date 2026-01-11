@@ -1,30 +1,22 @@
-name: Rebuild Phonetics Database
+# 此 workflow 不使用任何不可信的外部輸入，安全風險已評估
+name: Update Phonetics Database
 
 on:
-  # Cross-repository trigger from CNS11643-OpenData
-  repository_dispatch:
-    types: [cns-data-updated]
-
-  # Manual trigger
+  schedule:
+    - cron: '0 0 * * 0'  # 每週日 00:00 UTC
   workflow_dispatch:
-    inputs:
-      cns_version:
-        description: 'CNS data version (leave empty for latest)'
-        required: false
-        type: string
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  rebuild-database:
+  update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -32,57 +24,41 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
 
+      - name: Download CNS11643 data
+        run: |
+          mkdir -p data
+          git clone --depth=1 https://github.com/yintzuyuan/CNS11643-OpenData.git data/cns11643
+
       - name: Generate database
-        run: python scripts/generate_phonetics_db.py
+        run: python scripts/generate_phonetics_db.py --cns-data-dir data/cns11643
 
       - name: Verify database
         run: python scripts/verify_database.py
 
-      - name: Get CNS version info
-        id: version
-        env:
-          DISPATCH_VERSION: ${{ github.event.client_payload.version }}
-          INPUT_VERSION: ${{ inputs.cns_version }}
-          EVENT_NAME: ${{ github.event_name }}
+      - name: Check for changes
+        id: check
         run: |
-          # Get version from dispatch payload or use 'manual'
-          if [ "$EVENT_NAME" = "repository_dispatch" ] && [ -n "$DISPATCH_VERSION" ]; then
-            VERSION="$DISPATCH_VERSION"
-          elif [ -n "$INPUT_VERSION" ]; then
-            VERSION="$INPUT_VERSION"
+          DB_PATH="Show Chinese Phonetics.glyphsReporter/Contents/Resources/ShowChinesePhonetics_data.db"
+          if git diff --quiet "$DB_PATH"; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
           else
-            VERSION="manual-$(date +%Y%m%d)"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request
+        if: steps.check.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore: update phonetics database'
-          branch: sync/phonetics-db-update
-          delete-branch: true
-          title: 'chore: update phonetics database'
+          title: 'chore: 更新注音資料庫'
           body: |
-            ## Phonetics Database Update
+            ## 自動更新
 
-            The phonetics database has been regenerated from the latest CNS11643 data.
+            上游 CNS11643 資料有更新，已自動重新建置注音資料庫。
 
-            | Item | Value |
-            |------|-------|
-            | CNS Version | `${{ steps.version.outputs.version }}` |
-            | Trigger | `${{ github.event_name }}` |
-            | Workflow Run | [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
-
-            ## Verification
-
-            The database has passed all integrity checks:
-            - Record count within expected range
-            - Sample character verification
-            - Unicode format validation
-
-            ---
-            *This PR was automatically created by GitHub Actions*
-          labels: |
-            data-sync
-            automated
+            **驗證**：
+            - [x] 記錄數檢查通過
+            - [x] 樣本字元驗證通過
+            - [x] Unicode 格式驗證通過
+          branch: chore/update-phonetics-db
+          labels: automation,data-update
