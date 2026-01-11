@@ -1,0 +1,88 @@
+name: Rebuild Phonetics Database
+
+on:
+  # Cross-repository trigger from CNS11643-OpenData
+  repository_dispatch:
+    types: [cns-data-updated]
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      cns_version:
+        description: 'CNS data version (leave empty for latest)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  rebuild-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Generate database
+        run: python scripts/generate_phonetics_db.py
+
+      - name: Verify database
+        run: python scripts/verify_database.py
+
+      - name: Get CNS version info
+        id: version
+        env:
+          DISPATCH_VERSION: ${{ github.event.client_payload.version }}
+          INPUT_VERSION: ${{ inputs.cns_version }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          # Get version from dispatch payload or use 'manual'
+          if [ "$EVENT_NAME" = "repository_dispatch" ] && [ -n "$DISPATCH_VERSION" ]; then
+            VERSION="$DISPATCH_VERSION"
+          elif [ -n "$INPUT_VERSION" ]; then
+            VERSION="$INPUT_VERSION"
+          else
+            VERSION="manual-$(date +%Y%m%d)"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update phonetics database'
+          branch: sync/phonetics-db-update
+          delete-branch: true
+          title: 'chore: update phonetics database'
+          body: |
+            ## Phonetics Database Update
+
+            The phonetics database has been regenerated from the latest CNS11643 data.
+
+            | Item | Value |
+            |------|-------|
+            | CNS Version | `${{ steps.version.outputs.version }}` |
+            | Trigger | `${{ github.event_name }}` |
+            | Workflow Run | [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+            ## Verification
+
+            The database has passed all integrity checks:
+            - Record count within expected range
+            - Sample character verification
+            - Unicode format validation
+
+            ---
+            *This PR was automatically created by GitHub Actions*
+          labels: |
+            data-sync
+            automated

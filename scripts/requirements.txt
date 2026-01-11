@@ -1,0 +1,4 @@
+# ShowBopomofo Database Generation Dependencies
+# Python 3.9+
+
+requests>=2.28.0
