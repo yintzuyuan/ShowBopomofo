@@ -9,7 +9,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>Show Chinese Phonetics</string>
 	<key>CFBundleExecutable</key>
-	<string>Show Chinese Phonetics</string>
+	<string>ShowChinesePhonetics</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.YinTzuYuan.ShowChinesePhonetics</string>
 	<key>CFBundleInfoDictionaryVersion</key>
