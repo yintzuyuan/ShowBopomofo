@@ -1,0 +1,21 @@
+/* Plugin title shown in menu */
+"plugin.title" = "한자 발음";
+
+/* Main menu item title */
+"menu.displayMode.title" = "한자 발음 표시 모드";
+
+/* Section headers */
+"section.cns" = "CNS11643 전자고 (대만)";
+"section.unihan" = "Unicode Unihan";
+
+/* Display mode options - CNS11643 */
+"mode.zhuyin" = "주음부호";
+"mode.pinyin" = "한어병음";
+"mode.wadeGiles" = "웨이드-자일스 표기법";
+
+/* Display mode options - Unicode Unihan */
+"mode.mandarin" = "한어병음";
+"mode.cantonese" = "광둥어 (월병)";
+"mode.japanese" = "일본어";
+"mode.korean" = "한국어";
+"mode.vietnamese" = "베트남어";

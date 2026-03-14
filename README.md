@@ -1,21 +1,21 @@
-# ShowHanPhonetics — Source Code
+# ShowChinesePhonetics — Source Code
 
 > **For users**: Please visit the [`main` branch](../../tree/main) to install the plugin via Glyphs Plugin Manager.
 
-This branch contains the Objective-C source code for ShowHanPhonetics, a Glyphs 3 Reporter plugin that displays Han character phonetic annotations.
+This branch contains the Objective-C source code for ShowChinesePhonetics, a Glyphs 3 Reporter plugin that displays Han character phonetic annotations.
 
 ## Build
 
 ```bash
-xcodebuild -project ShowHanPhonetics.xcodeproj -scheme ShowHanPhonetics -configuration Release build
+xcodebuild -project ShowChinesePhonetics.xcodeproj -scheme ShowChinesePhonetics -configuration Release build
 ```
 
-The build output `Show Chinese Phonetics.glyphsReporter` can be found in `build/Release/`.
+The build output `ShowChinesePhonetics.glyphsReporter` can be found in `build/Release/`.
 
 ### Install to Glyphs
 
 ```bash
-cp -R "build/Release/Show Chinese Phonetics.glyphsReporter" \
+cp -R build/Release/ShowChinesePhonetics.glyphsReporter \
   ~/Library/Application\ Support/Glyphs\ 3/Plugins/
 ```
 
@@ -25,7 +25,7 @@ Restart Glyphs to load the plugin.
 
 | File | Role |
 |------|------|
-| `ShowHanPhonetics.h/m` | UI logic, GlyphsReporter protocol, 8 display modes, context menu |
+| `ShowChinesePhonetics.h/m` | UI logic, GlyphsReporter protocol, 8 display modes, context menu |
 | `PhoneticDatabase.h/m` | Data access layer, SQLite queries, NSCache, EUI fallback |
 
 ### Database Schema
