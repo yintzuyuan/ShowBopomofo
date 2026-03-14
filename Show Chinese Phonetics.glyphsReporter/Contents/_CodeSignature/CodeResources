@@ -4,19 +4,19 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Resources/ShowChinesePhonetics-Prefix.pch</key>
+		<key>Resources/Info.plist</key>
 		<data>
-		06iyBEFGeadxxTwO+TQy5wyo8ZY=
+		NnLcAr5Ua5fdJcxSCL0zRa0XIS0=
 		</data>
-		<key>Resources/ShowChinesePhonetics_data.db</key>
+		<key>Resources/ShowHanPhonetics_data.db</key>
 		<data>
-		ursNUZ5G656NlfVL4SlxvnTZtDM=
+		RgYZv6Eo0lj9S1Yc8W5KcQZJXDo=
 		</data>
 		<key>Resources/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			VVwznJNRLhRw8w6lSKLWI32kfq4=
+			RPLAT690gpy0RhVSq7/IJN6+syA=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -25,7 +25,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			FbgjRerk9ahr/FyjRQVZvt8hcT8=
+			WLJro5ng7txZXky1jOxtwWjIjBM=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -34,7 +34,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			tFbBkKDp/T+ewq5xx5jYoU8wFUc=
+			UVRIDGI6tbYr/Y2MjXDCYzISLdM=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -43,7 +43,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			wbSmV2gmxqMLdwA0zBPkzf2cTBU=
+			8F0B/iavYIvwpengX731PXl7wdo=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -52,7 +52,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			QakY0wwyYI8gwPAnsdsxNmX2kd4=
+			TwIXG21MqWCiQAfut3LMQIS/ZgY=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -60,25 +60,25 @@
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Resources/ShowChinesePhonetics-Prefix.pch</key>
+		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			6AhjZGbZvrh2sWTv0Ukk3p7pic2rdDCiHj/sDGfmMo4=
+			2JO6tyKgCLcQFypHwyxmayrE4VwUJVHPA+uSQnUihBs=
 			</data>
 		</dict>
-		<key>Resources/ShowChinesePhonetics_data.db</key>
+		<key>Resources/ShowHanPhonetics_data.db</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Q+A8xKvVLnnWtaGRwReowl9Rkp/Ub26/GrvicJ4mXEA=
+			h6wKMaNv2/FZnvq4rngLmHFL9b75FmANkC2L7FbvT3E=
 			</data>
 		</dict>
 		<key>Resources/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			ULZePJck5JMoKR3kG4PHn13kA0a9JISmBwB0LagvGF4=
+			dHfuAtRhgznLwuuqamopsT/B/Bq4FRxfbRkLmMLdBZg=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -87,7 +87,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			OvFSciRP+7v1iGC8/R3RD6QaSjc9UbKIh4Oz2qSHooY=
+			48ZzVoiqvwNxWQ60xzfvwkIVCNV/uKifCBaBeEKFhyA=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -96,7 +96,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			e1Vmem//R5KPz00K6nEmroWWWP6F+tPgrmrK3lBnhBQ=
+			BeYyNdv/TYi0lWRLsecut7eZx5ILtCxm8Yiu7Eb6eCY=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -105,7 +105,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			YM+4/5c35jQDKcIX3aWn7bOiiAkty8n7TO2CTT1H+Zk=
+			nN/e3RtXPHn9gmKs2XD6JkKT2yaqYGxVNzQJS/xuTsc=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -114,7 +114,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			4RgnmRB1ZuTyh0prfNynQzK3V1t1J3pzyXk9373VstE=
+			SHIEMNdwmQU084+Z7ikkd4aY9sFxoFbdU8XRfTfP6n8=
 			</data>
 			<key>optional</key>
 			<true/>
