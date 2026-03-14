@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Show Chinese Phonetics</string>
+	<string>ShowChinesePhonetics</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
@@ -47,6 +47,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2025 TzuYuan Yin</string>
 	<key>NSPrincipalClass</key>
-	<string>ShowHanPhonetics</string>
+	<string>ShowChinesePhonetics</string>
 </dict>
 </plist>

@@ -6,9 +6,9 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		NnLcAr5Ua5fdJcxSCL0zRa0XIS0=
+		IHZszSfk4pzz/BiNPpza/17f1SE=
 		</data>
-		<key>Resources/ShowHanPhonetics_data.db</key>
+		<key>Resources/ShowChinesePhonetics_data.db</key>
 		<data>
 		RgYZv6Eo0lj9S1Yc8W5KcQZJXDo=
 		</data>
@@ -64,10 +64,10 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2JO6tyKgCLcQFypHwyxmayrE4VwUJVHPA+uSQnUihBs=
+			6fu1Un9Ta7Aqz1+qLKtWS6CxLBCT+A1h0LGe9MsUMc8=
 			</data>
 		</dict>
-		<key>Resources/ShowHanPhonetics_data.db</key>
+		<key>Resources/ShowChinesePhonetics_data.db</key>
 		<dict>
 			<key>hash2</key>
 			<data>
